@@ -5,7 +5,7 @@ class PieceStruct():
 	def __init__(self, name, color, image, pos):
 		self.piece: str = name
 		self.color: bool = color # true is black, false is white
-		self.piece_id = int = 0
+		self.piece_id: int = 0
 		self.pos = pos
 		if (image != None):
 			self.photo: ImageTk.PhotoImage = ImageTk.PhotoImage(Image.open(image))
@@ -56,6 +56,6 @@ def	game_init():
 		game.board[6][i] = PieceStruct("pawn", False, "../png/pieces/wpawn.png", [6, i])
 	for i in range(2, 6):
 		for j in range (8):
-			game.board[i][j] = PieceStruct("none", False, None, [0, 0])
+			game.board[i][j] = PieceStruct("none", False, None, [i, j])
 
 	return game
