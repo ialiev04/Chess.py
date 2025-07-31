@@ -53,7 +53,7 @@ def	game_init():
 	game.board[7][6] = PieceStruct("knight", False, "../png/pieces/wknight.png", [7, 6])
 	game.board[7][7] = PieceStruct("rook", False, "../png/pieces/wrook.png", [7, 7])
 	for i in range(8):
-		game.board[6][i] = PieceStruct("none", None, None, [6, i])    #game.board[6][i] = PieceStruct("pawn", False, "../png/pieces/wpawn.png", [6, i])
+		game.board[6][i] = PieceStruct("none", None, None, [6, i])	#game.board[6][i] = PieceStruct("pawn", False, "../png/pieces/wpawn.png", [6, i])
 	for i in range(2, 6):
 		for j in range (8):
 			game.board[i][j] = PieceStruct("none", None, None, [i, j])
