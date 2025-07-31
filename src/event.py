@@ -2,6 +2,7 @@ from functools import partial
 from display import *
 from init import *
 from movement import *
+from movement import validate_piece_mov
 
 def	choose_piece(game, row, col):
 	if (game.board[row][col].piece == "none"):
