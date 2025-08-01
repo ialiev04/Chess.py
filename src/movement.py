@@ -7,19 +7,42 @@ def	capture_piece(root, game, row, col):
 	root.canvas.delete(game.board[row][col].piece_id)
 	move_piece(root, game, row, col)
 
-def is_path_clear(board, start_y, start_x, end_y, end_x):
-	y_direction = 1 if end_y > start_y else -1
-	x_direction = 1 if end_x > start_x else -1
-
 def	play_pawn(root, game, row, col):
-	...
+	pawn = game.selected
+	cur_y = pawn.pos[0]
+	cur_x = pawn.pos[1]
+
+	if (cur_y == row and cur_x == col):
+		return
+
+	#first time movers
+	if (abs(row - cur_y) == 2 and col == cur_x):
+		y_dir = 1 if pawn.color == True else -1
+		if ((pawn.color == False and cur_y == 6) or (pawn.color == True and cur_y == 1)):
+			if (game.board[row][col].piece == "none" and game.board[row + y_dir][col].piece == "none"):
+				move_piece(root, game, row, col)
+		else:
+			return
+
+	#seasoned movers
+	elif (abs(row - cur_y) == 1 and col == cur_x):
+		if ((pawn.color == False and row - cur_y == -1) and game.board[row][col].piece == "none"):
+			move_piece(root, game, row, col)
+		elif ((pawn.color == True and row - cur_y == 1)and game.board[row][col].piece == "none"):
+			move_piece(root, game, row, col)
+		else:
+			return
+			
+
 
 def	play_rook(root, game, row, col):
 	rook = game.selected
 	cur_y = rook.pos[0]
 	cur_x = rook.pos[1]
+
 	if (cur_y == row and cur_x == col):
 		return
+
 	if ((cur_y != row and cur_x == col) or (cur_y == row and cur_x != col)):
 		if (cur_y != row):
 			start = min(cur_y, row)
@@ -33,8 +56,10 @@ def	play_rook(root, game, row, col):
 			for i in range(start + 1, end):
 				if game.board[row][i].piece != "none":
 					return
+				
 	else:
 		return
+	
 	if (game.board[row][col].color == game.selected.color):
 		return
 	else:
@@ -67,11 +92,18 @@ def	play_bishop(root, game, row, col):
 
 	if (cur_y == row and cur_x == col):
 		return
-	
-	if not is_path_clear(game.board, cur_y, cur_x, row, col):
-        return
 	if (abs(cur_y - row) == abs(cur_x - col)):
-		...
+		y_dir = 1 if row < cur_y else -1
+		x_dir = 1 if col < cur_x else -1
+		check_y = row
+		check_x = col
+		for i in range(abs(row - cur_y) - 1):
+			check_y += y_dir
+			check_x += x_dir
+			if (game.board[check_y][check_x].piece != "none"):
+				return
+	else:
+		return
 	if (game.board[row][col].color != bishop.color):
 		if (game.board[row][col].color == None):
 			move_piece(root, game, row, col)
@@ -104,7 +136,7 @@ def	play_queen(root, game, row, col):
 	if (cur_y == row and cur_x == col):
 		return
 	if (abs(cur_y - row) == abs(cur_x - col) or ((cur_y != row and cur_x == col) or (cur_y == row and cur_x != col))):
-		if (cur_y != row and cur_x == col) or (cur_y == row and cur_x != col):
+		if (cur_y != row and cur_x == col) or (cur_y == row and cur_x != col):	#rook logic
 			if (cur_y != row):
 				start = min(cur_y, row)
 				end = max(cur_y, row)
@@ -117,14 +149,20 @@ def	play_queen(root, game, row, col):
 				for i in range(start + 1, end):
 					if game.board[row][i].piece != "none":
 						return
-		elif (abs(cur_y - row) == abs(cur_x - col)):
-			...
-		else:
-			start = min(cur_x, col)
-			end = max(cur_x, col)
-			for i in range(start + 1, end):
-				if game.board[row][i].piece != "none":
-					return
+		elif (abs(cur_y - row) == abs(cur_x - col)):	#bishop logic
+			if (abs(cur_y - row) == abs(cur_x - col)):
+				y_dir = 1 if row < cur_y else -1
+				x_dir = 1 if col < cur_x else -1
+				check_y = row
+				check_x = col
+				for i in range(abs(row - cur_y) - 1):
+					check_y += y_dir
+					check_x += x_dir
+					if (game.board[check_y][check_x].piece != "none"):
+						return
+			else:
+				return
+				
 	if (game.board[row][col].color != queen.color):
 		if (game.board[row][col].color == None):
 			move_piece(root, game, row, col)
@@ -161,3 +199,7 @@ def	validate_piece_mov(root, game, row, col):
 	elif (game.selected.piece == "king"):
 		play_king(root, game, row, col)
 	game.state["mode"] = "select"
+
+
+	#knight sometimes doesnt capture when in row(0)
+	#king moves like knight sometimes?!
